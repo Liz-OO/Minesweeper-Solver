@@ -1,0 +1,122 @@
+<div class="home-container">
+    <div class="window">
+      <div class="window-title-bar">
+        <div class="title-icon">👾</div>
+        <span class="title">Retro Minesweeper Helper</span>
+        <div class="window-controls">
+          <button class="minimize">_</button>
+          <button class="maximize">□</button>
+          <button class="close">×</button>
+        </div>
+      </div>
+      
+      <div class="window-content">
+        <div class="app-description">
+          <h1>Minesweeper Solver 1.0</h1>
+          <div class="game-face">😎</div>
+          <p>Take a picture of your Minesweeper board and get instant help!</p>
+          <p>This app uses advanced computer vision to:</p>
+          <ul>
+            <li>Detect your Minesweeper grid</li>
+            <li>Identify numbered cells</li>
+            <li>Suggest safe moves</li>
+            <li>Mark potential mine locations</li>
+          </ul>
+        </div>
+        
+        <div class="upload-section">
+          <input 
+            type="file" 
+            #fileInput 
+            (change)="onFileSelected($event)" 
+            accept="image/*" 
+            class="file-input"
+          >
+          <div class="upload-box" (click)="fileInput.click()">
+            <p>📷 CAPTURE BOARD IMAGE</p>
+            <small>Supports PNG, JPG, JPEG</small>
+          </div>
+          
+          <div *ngIf="selectedFile" class="file-preview">
+            <p>Selected File: {{ selectedFile.name }}</p>
+            <img *ngIf="imagePreview" [src]="imagePreview" alt="Preview" class="preview-image">
+          </div>
+        </div>
+        
+        <button 
+          class="analyze-button" 
+          [disabled]="!selectedFile || isAnalyzing"
+          (click)="analyzeImage()"
+        >
+          <span *ngIf="!isAnalyzing">ANALYZE BOARD 🔍</span>
+          <span *ngIf="isAnalyzing">ANALYZING... ⏳</span>
+        </button>
+  
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+        
+        <!-- Analysis Results -->
+        <div *ngIf="analysisResult" class="analysis-results">
+          <h2>:: ANALYSIS RESULTS ::</h2>
+          
+          <div class="results-summary">
+            <div class="result-card">
+              <h3>⭐ SAFE MOVES ⭐</h3>
+              <p>We found {{ analysisResult.new_safe_cells.length }} safe moves!</p>
+            </div>
+            
+            <div class="result-card">
+              <h3>⚠️ MINES DETECTED ⚠️</h3>
+              <p>We found {{ analysisResult.new_flags.length }} mines!</p>
+            </div>
+          </div>
+          
+          <div class="grid-container">
+            <h3>MINESWEEPER GRID</h3>
+            
+            <div class="grid-visualization">
+              <div *ngFor="let row of analysisResult.grid_with_more_flags; let rowIndex = index" class="grid-row">
+                <div 
+                  *ngFor="let cell of row; let colIndex = index" 
+                  class="grid-cell" 
+                  [ngClass]="[getCellClass(cell), isHighlightedCell(rowIndex, colIndex) ? 'highlighted' : '']"
+                >
+                  {{ getCellContent(cell) }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="legend">
+              <div class="legend-item">
+                <div class="legend-cell unopened"></div>
+                <span>UNOPENED</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-cell flag">🚩</div>
+                <span>MINE</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-cell highlighted empty"></div>
+                <span>SAFE CLICK</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Tips Section -->
+          <div class="tips-section">
+            <h3>NEXT STEPS</h3>
+            <ul>
+              <div *ngIf="analysisResult.new_safe_cells.length > 0">
+                <li>Click on the highlighted safe cells to continue solving.</li>
+              </div>
+              <div *ngIf="analysisResult.new_flags.length > 0">
+                <li>Flag the highlighted mines to mark them as dangerous.</li>
+              </div>
+              <li>Take another picture if you get stuck again!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
