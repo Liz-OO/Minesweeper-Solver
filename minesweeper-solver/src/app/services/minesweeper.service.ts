@@ -15,7 +15,7 @@ export interface MinesweeperAnalysisResult {
   providedIn: 'root'
 })
 export class MinesweeperService {
-  private apiUrl = 'http://localhost:8000';
+  private apiUrl = 'https://minesweeper-solver-api.onrender.com';
 
   constructor(private http: HttpClient) { }
 

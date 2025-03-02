@@ -508,3 +508,16 @@
     background-color: #000080;
     color: #ffffff;
   }
+
+  @media (max-width: 768px) {
+    .window {
+      width: 100%;
+      height: auto;
+      border-radius: 0;
+    }
+    
+    .preview-image {
+      max-width: 100%;
+      height: auto;
+    }
+  }
