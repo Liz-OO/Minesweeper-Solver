@@ -13,6 +13,15 @@ export class HomeComponent {
   analysisResult: MinesweeperAnalysisResult | null = null;
   errorMessage: string | null = null;
 
+  // Added for large board support
+  cellSize: number = 30; // Default cell size
+  minCellSize: number = 16; // Minimum cell size
+  maxCellSize: number = 40; // Maximum cell size
+  defaultCellSize: number = 30; // Default cell size for reset
+  
+  // Grid dimensions
+  gridSize: { rows: number, cols: number } = { rows: 0, cols: 0 };
+
   constructor(private minesweeperService: MinesweeperService) {}
 
   onFileSelected(event: any): void {
@@ -47,6 +56,10 @@ export class HomeComponent {
           this.analysisResult = result;
           this.isAnalyzing = false;
           console.log('Analysis result:', result);
+          
+          // Added: Auto-adjust cell size for large boards
+          this.updateGridSize();
+          this.autoCellSize();
         },
         error: (error: any) => {
           console.error('Error analyzing board:', error);
@@ -54,6 +67,55 @@ export class HomeComponent {
           this.isAnalyzing = false;
         }
       });
+  }
+
+  // Added: Update grid dimensions
+  updateGridSize(): void {
+    if (this.analysisResult) {
+      this.gridSize = {
+        rows: this.analysisResult.original_grid.length,
+        cols: this.analysisResult.original_grid[0].length
+      };
+    }
+  }
+
+  // Added: Automatically adjust cell size based on grid dimensions
+  autoCellSize(): void {
+    if (this.gridSize.rows > 16 || this.gridSize.cols > 30) {
+      // For expert boards (typically 16x30 or larger)
+      const containerWidth = 700; // Approximate container width
+      const containerHeight = 400; // Approximate container height
+      
+      // Calculate size based on available space and grid dimensions
+      this.cellSize = Math.max(this.minCellSize, Math.min(
+        Math.floor(containerWidth / this.gridSize.cols), 
+        Math.floor(containerHeight / this.gridSize.rows),
+        this.defaultCellSize  // Don't go larger than default
+      ));
+    } else {
+      // For smaller boards, use default size
+      this.cellSize = this.defaultCellSize;
+    }
+  }
+
+  // Added: Update cell size (handled by ngModel)
+  updateCellSize(): void {
+    // This is intentionally left empty as ngModel handles the binding
+  }
+
+  // Added: Zoom in
+  zoomIn(): void {
+    this.cellSize = Math.min(this.cellSize + 2, this.maxCellSize);
+  }
+
+  // Added: Zoom out
+  zoomOut(): void {
+    this.cellSize = Math.max(this.cellSize - 2, this.minCellSize);
+  }
+
+  // Added: Reset zoom to auto-calculated level
+  resetZoom(): void {
+    this.autoCellSize();
   }
 
   // Helper methods for display

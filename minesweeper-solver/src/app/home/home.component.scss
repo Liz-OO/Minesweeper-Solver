@@ -1,4 +1,4 @@
-
+// KEEP ALL YOUR EXISTING STYLES FIRST
 .home-container {
     padding: 20px;
     display: flex;
@@ -508,7 +508,7 @@
     background-color: #000080;
     color: #ffffff;
   }
-
+  
   @media (max-width: 768px) {
     .window {
       width: 100%;
@@ -520,4 +520,88 @@
       max-width: 100%;
       height: auto;
     }
+  }
+  
+  // NEW STYLES FOR LARGE BOARD SUPPORT
+  
+  // Scrollable grid container
+  .grid-scroll-container {
+    overflow: auto;
+    max-height: 400px;
+    margin-bottom: 10px;
+    border: 2px solid;
+    border-color: #808080 #ffffff #ffffff #808080;
+    background-color: #c0c0c0;
+  }
+  
+  // Grid controls style
+  .grid-controls {
+    background-color: #aaaab4;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid;
+    border-color: #808080 #ffffff #ffffff #808080;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    
+    input[type="range"] {
+      flex-grow: 1;
+      height: 20px;
+      -webkit-appearance: none;
+      background-color: #c0c0c0;
+      border: 2px solid;
+      border-color: #808080 #ffffff #ffffff #808080;
+      
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        background-color: #c0c0c0;
+        border: 2px solid;
+        border-color: #ffffff #808080 #808080 #ffffff;
+        cursor: pointer;
+      }
+    }
+    
+    .zoom-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      .zoom-btn {
+        border: 2px solid;
+        border-color: #ffffff #808080 #808080 #ffffff;
+        background-color: #c0c0c0;
+        width: 24px;
+        height: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        &:active {
+          border-color: #808080 #ffffff #ffffff #808080;
+          transform: translate(1px, 1px);
+        }
+      }
+      
+      span {
+        font-weight: bold;
+        color: #000080;
+        min-width: 40px;
+        text-align: center;
+      }
+    }
+  }
+  
+  // Grid stats style
+  .grid-stats {
+    text-align: center;
+    margin: 5px 0 10px;
+    font-weight: bold;
+    color: #000080;
+    text-shadow: 1px 1px 0 #ffffff;
   }

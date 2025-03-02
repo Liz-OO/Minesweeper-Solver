@@ -71,20 +71,49 @@
               <p>We found {{ analysisResult.new_flags.length }} mines!</p>
             </div>
           </div>
+  
+          <!-- Added grid size controls -->
+          <div class="grid-controls">
+            <input 
+              type="range" 
+              [min]="minCellSize" 
+              [max]="maxCellSize" 
+              [step]="1" 
+              [(ngModel)]="cellSize" 
+              (input)="updateCellSize()"
+            >
+            <div class="zoom-buttons">
+              <button class="zoom-btn" (click)="zoomOut()">-</button>
+              <span>{{ cellSize }}px</span>
+              <button class="zoom-btn" (click)="zoomIn()">+</button>
+              <button class="zoom-btn" (click)="resetZoom()">R</button>
+            </div>
+          </div>
           
           <div class="grid-container">
             <h3>MINESWEEPER GRID</h3>
             
-            <div class="grid-visualization">
-              <div *ngFor="let row of analysisResult.grid_with_more_flags; let rowIndex = index" class="grid-row">
-                <div 
-                  *ngFor="let cell of row; let colIndex = index" 
-                  class="grid-cell" 
-                  [ngClass]="[getCellClass(cell), isHighlightedCell(rowIndex, colIndex) ? 'highlighted' : '']"
-                >
-                  {{ getCellContent(cell) }}
+            <!-- Added scrollable container -->
+            <div class="grid-scroll-container">
+              <div class="grid-visualization">
+                <div *ngFor="let row of analysisResult.grid_with_more_flags; let rowIndex = index" class="grid-row">
+                  <div 
+                    *ngFor="let cell of row; let colIndex = index" 
+                    class="grid-cell" 
+                    [ngClass]="[getCellClass(cell), isHighlightedCell(rowIndex, colIndex) ? 'highlighted' : '']"
+                    [style.width.px]="cellSize"
+                    [style.height.px]="cellSize"
+                    [style.font-size.px]="cellSize * 0.5"
+                  >
+                    {{ getCellContent(cell) }}
+                  </div>
                 </div>
               </div>
+            </div>
+            
+            <!-- Added grid stats info -->
+            <div class="grid-stats">
+              <p>Grid: {{ gridSize.rows }} × {{ gridSize.cols }} ({{ gridSize.rows * gridSize.cols }} cells)</p>
             </div>
             
             <div class="legend">
