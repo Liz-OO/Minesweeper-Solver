@@ -295,11 +295,14 @@ def classify_cell_with_adaptive_threshold(cell_img, features, adaptive_threshold
     """
     Classify a cell using adaptive thresholding based on image characteristics
     """
-    # Flag 
+    # Flag detection with added edge checking
     black_pixels = np.sum((cell_img[:,:,0] < 60) & (cell_img[:,:,1] < 60) & (cell_img[:,:,2] < 60))
     red_pixels = np.sum((cell_img[:,:,2] > 180) & (cell_img[:,:,0] < 100) & (cell_img[:,:,1] < 100))
     std_gray = features['std_gray']
-    if black_pixels > 10 and red_pixels > 10 and std_gray > 70:
+    edge_percent = features['edge_percent']
+    
+    # Flags should have significant edges due to the flag shape and pole
+    if black_pixels > 10 and red_pixels > 10 and std_gray > 40 and edge_percent > 0.01:
         return -2 
     
     avg_bgr = features['avg_bgr']
@@ -370,7 +373,7 @@ def classify_cell_with_adaptive_threshold(cell_img, features, adaptive_threshold
 
 if __name__ == "__main__":
 
-    image_path = 'images/test1.png'
+    image_path = 'images/IMG_0307.jpg'
     
     grid_data, contour_img, grid_img = identify_cells_and_create_grid(image_path)
     
